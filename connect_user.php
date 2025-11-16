@@ -49,18 +49,18 @@
             font-weight: bold;
             transition: background 0.3s;
         }
-        .ajouter {
+        .cnx {
             background-color: #007BFF; /* Blue */
             color: white;
         }
-        .ajouter:hover {
+        .cnx:hover {
             background-color: #0056b3;
         }
-        .annuler {
+        .eff {
             background-color: #ccc; /* Grey */
             color: #333;
         }
-        .annuler:hover {
+        .eff:hover {
             background-color: #999;
         }
     </style>
@@ -68,8 +68,13 @@
 </head>
 <body>
     <h1>Stock de produit</h1>
+     <?php if (isset($_GET["error"]) && $_GET["error"] == "invalid_credentials"): ?>
+        <p style="color:red; font-weight:bold;">
+            ⚠  Certaines de vos informations sont incorrectes. Réessayez.!
+        </p>
+    <?php endif; ?>
     <p><font size="3">Connecter vous!</font></p>
-    <form method="post" action="user.php">
+    <form method="post" action="valid.php">
         <input type="hidden" name="source" value="user_form">
 
         <label><b>Email</b></label>
@@ -80,8 +85,8 @@
 
         
         <div class="button-container">
-            <input type="submit" value="Connexion" class="ajouter">
-            <input type="reset" value="Effacer" class="annuler">
+            <input type="submit" value="Connexion" class="cnx">
+            <input type="reset" value="Effacer" class="eff">
         </div>
         <center><a href="creer_compte.php"><font size="3"><u>Créer un compte</u></font></a></center>
     </form>

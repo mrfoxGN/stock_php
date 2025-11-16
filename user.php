@@ -9,10 +9,6 @@ $past = $_POST["past"];    // password au niveau de creation
 
 $source = $_POST["source"];
 
-
-
-// password au niveau de connexion
-
     // connexion au server et la bdd
     $con = mysqli_connect("127.0.0.1", "root", "", "gestion_stock");
 
@@ -28,13 +24,12 @@ $source = $_POST["source"];
             $exist = true;
         }
     }
-    if ($exist == true) {
-    header("Location: creer_compte.php?error=email_exist");
-    exit();
-}
-
-    // Ajouter user
-    if (!$exist) {
+    if ($exist) {
+        header("Location: creer_compte.php?error=email_exist");
+        exit();
+    }
+    else {  
+        // Ajouter user
         $req = "INSERT INTO Users (Nom, Prenom, Age, Email, Pass_word) VALUES ('$nom', '$prenom', $age, '$email', '$past')";
         $ajouter = mysqli_query($con, $req);
         if (!$ajouter) die("Requete invalide: $req");
@@ -43,8 +38,7 @@ $source = $_POST["source"];
 
 
 // Aller au page de categorie
-if($source = "login_form")
-{
-header('Location: connect_user.php');
+if($source == "login_form"){
+    header('Location: connect_user.php');
 }
 ?>

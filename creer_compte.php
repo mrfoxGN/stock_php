@@ -68,11 +68,13 @@
 </head>
 <body>
     <h1>Stock de produit</h1>
+    
     <?php if (isset($_GET["error"]) && $_GET["error"] == "email_exist"): ?>
     <p style="color:red; font-weight:bold;">
         ⚠ Cet email existe déjà !
     </p>
-<?php endif; ?>
+    <?php endif; ?>
+
     <p><font size="4"> Veuillez remplir les champs suivant!</font></p>
     <form method="post" action="user.php">
         <input type="hidden" name="source" value="login_form">
