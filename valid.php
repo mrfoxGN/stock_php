@@ -16,12 +16,12 @@ $req = "SELECT IdU, Nom, Email, Pass_word
 $res = mysqli_query($con, $req);
 
 if ($line = mysqli_fetch_assoc($res)) {
-    // ✅ Login OK
-
-    // 1) On garde son id dans la session
+    // Garde id dans la session
     $_SESSION['user_id']   = $line['IdU'];
     $_SESSION['user_name'] = $line['Nom'];
     $_SESSION['user_mail'] = $line['Email'];
+
+    echo $_SESSION['user_id'], $_SESSION['user_name'];
 
     // 2) On l’envoie sur l’interface produit
     header("Location: produit.php");

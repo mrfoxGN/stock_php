@@ -1,9 +1,8 @@
 <?php
 session_start();
-$idu=$_SESSION['IdU'];
-echo "------------$idu-----";
+$idu=$_SESSION['user_id'];
 // Sécurité : user non connecté
-/*if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id'])) {
     header('Location: connect_user.php');
     exit();
 }
@@ -17,7 +16,7 @@ $prix  = $_POST['Prix'];
 $ref   = $_POST['cmnt'];
 
 
-if ($nom === '') {
+if (empty($nom)) {
     header('Location: produit.php?msg=err');
     exit();
 }
@@ -40,4 +39,4 @@ if (mysqli_query($con, $sql)) {
 } else {
     header('Location: produit.php?msg=err');
 }
-exit();*/
+exit();

@@ -2,11 +2,9 @@
 CREATE DATABASE IF NOT EXISTS gestion_stock;
 
 /* Usage de bdd */
-
 USE gestion_stock;
+
 /* Table Users */ 
-
-
 CREATE TABLE IF NOT EXISTS Users (
     IdU int PRIMARY KEY AUTO_INCREMENT,
     Nom varchar(50),
@@ -23,6 +21,7 @@ CREATE TABLE IF NOT EXISTS Produits (
     Nom_Produit varchar(50),
     Prix float,
     Quantite int,
-    Categorie VARCHAR(70),
+    Categorie varchar(70),
+    Commentaire varchar(100), 
     FOREIGN KEY (IdU) REFERENCES Users(IdU)
 );

@@ -2,230 +2,352 @@
 session_start();
 
 // Sécurité : si l’utilisateur n’est pas connecté → vers login
-/*if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id'])) {
     header('Location: connect_user.php');
     exit();
-}*/
-
-
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <title>Gestion de Stock</title>
-        
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background: #f2f2f2;
-                margin: 0;
-                padding: 0;
-            }
-            
-            .sidebar {
-                width: 220px;
-                background: #1f1f2e;
-                color: white;
-                height: 100vh;
-                position: fixed;
-                padding: 20px;
-            }
-            
-            .sidebar h2 {
-                margin-top: 0;
-            }
-            
-            .sidebar a {
-                display: block;
-                color: #dcdcdc;
-                text-decoration: none;
-                padding: 10px 0;
-                margin-top: 5px;
-            }
-            
-            .sidebar a:hover {
-                color: white;
-            }
-            
-            .content {
-                margin-left: 240px;
-                padding: 20px;
-            }
-            
-            h1 {
-                margin-top: 0;
-            }
-            
-            .user-info {
-                text-align: right;
-                color: #444;
-            }
-            
-            .form-row {
-                display: flex;
-                gap: 15px;
-                margin-bottom: 10px;
-            }
-            
-            .form-group {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-            }
-            
-            label {
-                font-weight: bold;
-                margin-bottom: 3px;
-            }
-            
-            input, select {
-                padding: 7px;
-                border: 1px solid #bbb;
-                border-radius: 4px;
-            }
-            
-            button {
-                padding: 9px 15px;
-                background: #2b70ff;
-                border: none;
-                color: white;
-                font-weight: bold;
-                border-radius: 4px;
-                cursor: pointer;
-                margin-top: 10px;
-            }
-            
-            button:hover {
-                background: #1b53cc;
-            }
-            
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 25px;
-            }
-            
-            th, td {
-                padding: 8px;
-                border: 1px solid #ddd;
-                text-align: left;
-            }
-            
-            th {
-                background: #eee;
-            }
-            
-            .msg-ok { color: green; font-weight: bold; }
-            .msg-err { color: red; font-weight: bold; }
-        </style>
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion de Stock</title>
+
+    <style>
+        /* GLOBAL */
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f6fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 240px;
+            background: linear-gradient(180deg, #1b1b2f, #1f1f38);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding: 25px;
+            box-shadow: 3px 0 8px rgba(0,0,0,0.2);
+
+            display: flex;            /* NEW */
+            flex-direction: column;   /* NEW */
+        }
+
+        .sidebar h2 {
+            font-size: 22px;
+            margin-bottom: 25px;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 10px;
+            margin-bottom: 8px;
+            color: #cfd0ff;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: 0.2s;
+            font-size: 15px;
+        }
+
+        .sidebar a:hover {
+            background: #30304d;
+            color: #fff;
+            padding-left: 18px;
+        }
+
+        .logout-link {
+            margin-top: 700px;         /* PUSHED TO BOTTOM */
+            background: #3d3d5c;
+        }
+
+        .logout-link:hover {
+            background: #2c2c46;
+        }
+
+        /* CONTENT AREA */
+        .content {
+            margin-left: 260px;
+            padding: 30px;
+        }
+
+        .user-info {
+            text-align: right;
+            color: #444;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #222;
+        }
+
+        h2 {
+            margin-top: 30px;
+            color: #333;
+        }
+
+        /* FORM CARD */
+        .card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 11px 20px;
+            background: #395bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 12px;
+            box-shadow: 0 3px 10px rgba(57,91,255,0.3);
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #2642d8;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #e6e9ff;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ececec;
+        }
+
+        tr:hover {
+            background: #f7f8ff;
+        }
+
+        .msg-ok { color: #0fa50f; font-weight: bold; }
+        .msg-err { color: #e60000; font-weight: bold; }
+    </style>
 </head>
+
 <body>
-    
-    <!-- MENU LATERAL -->
+
+    <!-- SIDEBAR -->
     <div class="sidebar">
-        <h2>Stock Manager</h2>
-        
-        <a href="produit.php">📦 Produits</a>
-        <a href="categorie.php">📁 Catégories</a>
-        <a href="logout.php">🚪 Déconnexion</a>
+        <h2>📦 Stock Manager</h2>
+
+        <a href="produit.php">Produits</a>
+        <a href="modify.php">Modifier</a>
+
+        <!-- Logout always at bottom -->
+        <a href="logout.php" class="logout-link">🚪 Déconnexion</a>
     </div>
-    
-    <!-- CONTENU PRINCIPAL -->
+
+    <!-- CONTENT -->
     <div class="content">
-        
+
         <div class="user-info">
             Connecté : <strong><?php echo $_SESSION['user_name']; ?></strong>
         </div>
-        
+
         <h1>Gestion de Stock</h1>
-        
+
+        <?php
+        if (isset($_GET['page'])) {
+
+            if ($_GET['page'] == "produit") {
+                include "produit.php";
+                exit();
+            }
+
+            if ($_GET['page'] == "modify") {
+                include "modify.php";
+                exit();
+            }
+
+            if ($_GET['page'] == "logout") {
+                include "logout.php";
+                exit();
+            }
+        }
+        ?>
+
         <!-- MESSAGE -->
         <?php if (isset($_GET['msg']) && $_GET['msg'] === 'ok'): ?>
             <p class="msg-ok">✔ Produit ajouté avec succès.</p>
-            <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'err'): ?>
-                <p class="msg-err">❌ Erreur lors de l’ajout.</p>
-                <?php endif; ?>
-                
-                <!-- FORMULAIRE D'AJOUT -->
-                <h2>Ajouter un produit</h2>
-                
-                <form method="POST" action="ajout_produit.php">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Nom produit</label>
-                            <input type="text" name="NomProd" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Catégorie</label>
-                            <select name="Categorie" required>
-                                <option value="">-- choisir --</option>
-                    <option value="Informatique & Électronique">Informatique & Électronique</option>
-                    <option value="Vêtements & Mode">Vêtements & Mode</option>
-                    <option value="Alimentaire & Boissons">Alimentaire & Boissons</option>
-                    <option value="Maison & Cuisine">Maison & Cuisine</option>
-                    <option value="Beauté & Hygiène">Beauté & Hygiène</option>
-                    <option value="Sport & Loisirs">Sport & Loisirs</option>
-                </select>
-            </div>
-        </div>
-        
-        <div class="form-row">
-            <div class="form-group">
-                <label>Quantité</label>
-                <input type="number" name="Quantite" min="0" required>
-            </div>
-            
-            <div class="form-group">
-                <label>Prix</label>
-                <input type="number" step="0.1" name="Prix" required>
-            </div>
-            
-            <div class="form-group">
-                <label>AJOUTER UN COMMENTAIRE</label>
-                <input type="text" name="cmnt">
-            </div>
-        </div>
-        
-        <button type="submit">Ajouter</button>
-    </form>
+        <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'err'): ?>
+            <p class="msg-err">❌ Erreur lors de l’ajout.</p>
+        <?php endif; ?>
 
-    <?php
-    // Connexion BDD
-    $con = mysqli_connect("127.0.0.1", "root", "", "gestion_stock");
-    //if (!$con) die("Erreur connexion BDD");
-    
-    // Récupérer les produits existants
-    $req = "SELECT * FROM Produits";
-    $liste = mysqli_query($con, $req);
-    ?>
+        <!-- FORMULAIRE -->
+        <h2>Ajouter un produit</h2>
 
-    <tr>
-    <!-- TABLEAU DES PRODUITS -->
-    <h2>Stock actuel</h2>
-    
-    <table>
-        <tr>
-            <th>Nom</th>
-            <th>Catégorie</th>
-            <th>Quantité</th>
-            <th>Prix</th>
-            <th>Référence</th>
-        </tr>
-        
-        <?php while ($row = mysqli_fetch_assoc($liste)): ?>
-            
-                <td><?= $row['Nom_Produit'] ?></td>
-                <td><?= $row['Categorie'] ?></td>
-                <td><?= $row['Quantite'] ?></td>
-                <td><?= $row['Prix'] ?></td>
-                <td><?= $row['commentaire'] ?></td>
+        <div class="card">
+            <form method="POST" action="ajout_produit.php">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nom produit</label>
+                        <input type="text" name="NomProd" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Catégorie</label>
+                        <select name="Categorie" required>
+                            <option value="">-- choisir --</option>
+                            <option>Informatique & Électronique</option>
+                            <option>Vêtements & Mode</option>
+                            <option>Alimentaire & Boissons</option>
+                            <option>Maison & Cuisine</option>
+                            <option>Beauté & Hygiène</option>
+                            <option>Sport & Loisirs</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Quantité</label>
+                        <input type="number" name="Quantite" min="0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Prix</label>
+                        <input type="number" name="Prix" step="0.1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Commentaire</label>
+                        <input type="text" name="cmnt">
+                    </div>
+                </div>
+
+                <button type="submit">Ajouter</button>
+
+            </form>
+        </div>
+
+        <?php
+        // Connexion BDD
+        $con = mysqli_connect("127.0.0.1", "root", "", "gestion_stock");
+        if (!$con) die("Erreur connexion BDD");
+
+        // Récupérer les produits
+        $req = "SELECT * FROM Produits WHERE IdU = " . $_SESSION['user_id'];
+        $liste = mysqli_query($con, $req);
+        ?>
+
+        <!-- TABLEAU -->
+        <h2>Stock actuel</h2>
+
+        <table>
+            <tr>
+                <th>Nom</th>
+                <th>Catégorie</th>
+                <th>Quantité</th>
+                <th>Prix</th>
+                <th>Commentaire</th>
             </tr>
-        <?php endwhile; ?>
-    </table>
 
-</div>
+            <?php while ($row = mysqli_fetch_assoc($liste)): ?>
+                <tr>
+                    <td><?= $row['Nom_Produit'] ?></td>
+                    <td><?= $row['Categorie'] ?></td>
+                    <td><?= $row['Quantite'] ?></td>
+                    <td><?= $row['Prix'] ?></td>
+                    <td><?= $row['Commentaire'] ?></td>
+                </tr>
+            <?php endwhile; ?>
+        </table>
+
+        <br><br>
+
+        <h2>Supprimer un produit</h2>
+        <form method="post" action="delete_produit.php">
+            <?php
+            $req = "SELECT Nom_Produit FROM Produits";
+            $res = mysqli_query($con, $req);
+            ?>
+            <select name='prd'>
+                <option value=''>--- delete ---</option>
+                <?php while ($row = mysqli_fetch_assoc($res)): ?>
+                    <option value="<?= $row['Nom_Produit'] ?>"><?= $row['Nom_Produit'] ?></option>
+                <?php endwhile; ?>
+            </select>
+
+            <button type="submit">Supprimer</button>
+
+            <?php if (isset($_GET['msg']) && $_GET['msg'] === 'ok_del'): ?>
+                <p class="msg-ok">✔ Produit supprimé avec succès.</p>
+            <?php elseif (isset($_GET['msg']) && $_GET['msg'] === 'err_del'): ?>
+                <p class="msg-err">❌ Erreur lors de la suppression.</p>
+            <?php endif; ?>
+        </form>
+
+    </div>
+
+    // Modification
+    
+    <form method="post" action="modify.php">
+            <?php
+            $req = "SELECT Nom_Produit FROM Produits";
+            $res = mysqli_query($con, $req);
+            ?>
+            <select name='prd'>
+                <option value=''>--- delete ---</option>
+                <?php while ($row = mysqli_fetch_assoc($res)): ?>
+                    <option value="<?= $row['Nom_Produit'] ?>"><?= $row['Nom_Produit'] ?></option>
+                <?php endwhile; ?>
+            </select>
+
+            <button type="submit">Supprimer</button>
+    </form>
 
 </body>
 </html>
